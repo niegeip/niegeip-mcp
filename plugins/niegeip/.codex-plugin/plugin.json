@@ -1,0 +1,21 @@
+{
+  "name": "niegeip",
+  "version": "0.1.0",
+  "description": "连接 NiegeIP 账户，选择已购 IP 并下载半身图、三视图和表情图。",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "NiegeIP",
+    "shortDescription": "把已购 IP 带入你的创作",
+    "longDescription": "在官方授权页面登录后，查看可用的已购 IP、检查三张创作用图、下载原图并继续创作。素材下载仍需有效购买授权和平台批准的外部使用权限。",
+    "developerName": "NiegeIP",
+    "category": "Creativity",
+    "capabilities": ["Read"],
+    "brandColor": "#4B7DFF",
+    "defaultPrompt": [
+      "列出我在 NiegeIP 购买且可用的 IP",
+      "下载选定 IP 的半身图、三视图和表情图"
+    ]
+  },
+  "repository": "https://github.com/niegeip/niegeip-mcp"
+}
