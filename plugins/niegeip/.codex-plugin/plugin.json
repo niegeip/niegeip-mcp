@@ -1,19 +1,20 @@
 {
   "name": "niegeip",
-  "version": "0.1.0",
-  "description": "连接 NiegeIP 账户，选择已购 IP 并下载半身图、三视图和表情图。",
+  "version": "0.1.1",
+  "description": "连接 NiegeIP 账户，选择自有或有效已购 IP 并下载三张创作用图。",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "NiegeIP",
-    "shortDescription": "把已购 IP 带入你的创作",
-    "longDescription": "在官方授权页面登录后，查看可用的已购 IP、检查三张创作用图、下载原图并继续创作。素材下载仍需有效购买授权和平台批准的外部使用权限。",
+    "shortDescription": "把你的 IP 带入创作",
+    "longDescription": "在本机浏览器完成官方授权，查看非草稿的自有及有效已购 IP、检查创作用图并下载。自有 IP 无需购买；他人 IP 需要有效购买授权且正常上架。",
     "developerName": "NiegeIP",
     "category": "Creativity",
     "capabilities": ["Read"],
     "brandColor": "#4B7DFF",
     "defaultPrompt": [
-      "列出我在 NiegeIP 购买且可用的 IP",
+      "请帮我添加 NiegeIP 远程 MCP 服务，地址为 https://web.api.niegeip.com/mcp。授权时使用本机系统默认浏览器，不要使用内置浏览器；保持 OAuth 登录进程与本地回调监听运行。打开本次生成的授权链接后，提示我：“请在浏览器中登录 NiegeIP 并点击允许授权，我会等待授权结果。”不要代我点击授权；超时后重新发起，不复用旧链接。确认授权成功后，列出非草稿的自有及有效已购 IP，区分持有来源，等待我选择。",
+      "列出我在 NiegeIP 非草稿的自有及有效已购 IP，区分持有来源",
       "下载选定 IP 的半身图、三视图和表情图"
     ]
   },
