@@ -102,3 +102,11 @@ codex plugin add niegeip@niegeip
 ```
 
 代码仓库为 https://github.com/niegeip/niegeip-mcp 。Plugin 已配置官方生产入口；只有自部署时才需替换地址。安装后首次授权需要用户本人完成。
+
+## 选中 IP 后的素材流程
+
+用户从清单选中唯一 IP 并要求创作后，Agent 应继续 `get_ip_creation_pack` → `create_download_links` → 下载或导入已有参考图 → 调用宿主实际可用的生成工具。列表不含图片不代表无素材，部分缺图不阻止已有图使用；只在成功清单确认 images 为空时报告缺图。
+
+官方 Pack 的 `downloadAllowed` / `additionalApprovalRequired` 描述平台素材下载权限，不等同无限商业用途。`access=owned` 的空购买授权编号正常。Node 适配器兼容旧购买清单，并保留新的 access、materialStatus、stage、nextAction 字段。错误与缺图分别处理，最多重试一次；生成器不可用时明确报告生成能力缺失，不要求用户重复上传平台已有图，也不默认索取 API Key。
+
+协议、适配器及下载 helper 的合成数据回归覆盖“自有 IP 空授权编号 + 部分缺图 + 取得链接 + 写入参考文件”，不调用付费生成服务，也不代表生产账户素材验收。本轮 Plugin 版本为 0.1.2。
