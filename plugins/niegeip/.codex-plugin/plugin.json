@@ -1,6 +1,6 @@
 {
   "name": "niegeip",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "连接 NiegeIP 账户，选择自有或有效已购 IP 并下载三张创作用图。",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",

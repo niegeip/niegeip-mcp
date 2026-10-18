@@ -73,3 +73,66 @@ test("production Gorig session errors ask the user to reconnect", async () => {
       !e.message.includes("private"),
   );
 });
+
+test("owner manifest and download contract accepts empty purchase ID and preserves workflow", async () => {
+  for (const access of ["owned", "purchased", undefined]) {
+    const api = new NiegeIPAPI(
+      new URL("https://api.example.invalid/api/web"),
+      undefined,
+      async (input) => {
+        const download = String(input).endsWith("download-links");
+        return Response.json({
+          code: 200,
+          data: {
+            asset: {
+              id: "123",
+              title: "fixture",
+              type: "virtual",
+              ...(access ? { access } : {}),
+            },
+            authorizationId: "",
+            downloadAllowed: true,
+            additionalApprovalRequired: false,
+            complete: false,
+            materialStatus: "partial",
+            stage: download ? "download_links" : "manifest",
+            nextAction: download
+              ? "consume_reference_images"
+              : "create_download_links",
+            images: [
+              {
+                kind: "three_view",
+                name: "三视图",
+                version: "1",
+                ...(download
+                  ? {
+                      url: "https://images.example.invalid/fixture.png",
+                      expiresAt: new Date(Date.now() + 60000).toISOString(),
+                    }
+                  : {}),
+              },
+            ],
+            missing: [
+              { kind: "half_body_front", name: "半身图" },
+              { kind: "expression_grid", name: "表情图" },
+            ],
+          },
+        });
+      },
+    );
+    if (access !== "owned") {
+      await assert.rejects(() => api.pack("123", false), ApiError);
+      continue;
+    }
+    const manifest = await api.pack("123", false);
+    assert.equal(manifest.asset.access, "owned");
+    assert.equal(manifest.downloadAllowed, true);
+    assert.equal(manifest.images[0]?.url, undefined);
+    assert.equal(manifest.nextAction, "create_download_links");
+    const links = await api.pack("123", true);
+    assert.equal(links.stage, "download_links");
+    assert.equal(links.images.length, 1);
+    assert.ok(links.images[0]?.url);
+    assert.equal(links.missing.length, 2);
+  }
+});

@@ -4,25 +4,36 @@ export const assetSchema = z.object({
   id,
   title: z.string(),
   type: z.string(),
+  access: z.enum(["owned", "purchased"]).optional(),
 });
-export const packSchema = z.object({
-  asset: assetSchema,
-  authorizationId: id,
-  authorizationExpiresAt: z.string().datetime().optional(),
-  complete: z.boolean(),
-  images: z
-    .array(
-      z.object({
-        kind: z.enum(["half_body_front", "three_view", "expression_grid"]),
-        name: z.string(),
-        version: id,
-        url: z.string().url().optional(),
-        expiresAt: z.string().datetime().optional(),
-      }),
-    )
-    .max(3),
-  missing: z.array(z.object({ kind: z.string(), name: z.string() })),
-});
+export const packSchema = z
+  .object({
+    asset: assetSchema,
+    authorizationId: z.union([id, z.literal("")]),
+    downloadAllowed: z.boolean().optional(),
+    additionalApprovalRequired: z.boolean().optional(),
+    materialStatus: z.enum(["complete", "partial", "missing"]).optional(),
+    stage: z.enum(["manifest", "download_links"]).optional(),
+    nextAction: z.string().optional(),
+    authorizationExpiresAt: z.string().datetime().optional(),
+    complete: z.boolean(),
+    images: z
+      .array(
+        z.object({
+          kind: z.enum(["half_body_front", "three_view", "expression_grid"]),
+          name: z.string(),
+          version: id,
+          url: z.string().url().optional(),
+          expiresAt: z.string().datetime().optional(),
+        }),
+      )
+      .max(3),
+    missing: z.array(z.object({ kind: z.string(), name: z.string() })),
+  })
+  .refine(
+    (pack) => pack.authorizationId !== "" || pack.asset.access === "owned",
+    { message: "Empty authorization ID is valid only for owned assets" },
+  );
 export class ApiError extends Error {
   constructor(
     public code: string,
